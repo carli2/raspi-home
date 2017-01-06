@@ -5,9 +5,10 @@ var logic = require('./logic.js');
 var lights = require('./lights.js');
 
 lights.init();
-
+app.use(express.static(__dirname));
 function sendMainPage(req, res, status) {
-	html = ('TODO: HTML Grundgerüst<br>');
+	html = ('<!DOCTYPE html>\n'+
+	'<html> <head> <title>Launix-Relay</title> <meta charset=\"utf-8\"> <meta name=\"viewport\" content=\"width=device-width, initial-scale=1\"> <link rel=\"stylesheet\" type=\"text/css\" href=\"/node_modules/bootstrap/dist/css/bootstrap.min.css\"> <link rel=\"stylesheet\" type=\"text/css\" href=\"/index.css\"> <script src=\"https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js\"></script> <script src=\"https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js\"></script> </head> <body>');
 	if (status) {
 		html += ('Status: ' + status + '<br>');
 	}
@@ -27,4 +28,4 @@ app.get('/action/:action/:parameter?', function (req, res) {
 	sendMainPage(req, res, logic.action (action, parameter));
 });
 
-app.listen(80);
+app.listen(8080);
