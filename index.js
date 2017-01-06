@@ -2,6 +2,9 @@ var express = require('express');
 var app = express();
 
 var logic = require('./logic.js');
+var lights = require('./lights.js');
+
+lights.init();
 
 function sendMainPage(req, res, status) {
 	html = ('TODO: HTML Grundgerüst<br>');
