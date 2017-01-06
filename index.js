@@ -27,4 +27,4 @@ app.get('/action/:action/:parameter?', function (req, res) {
 	sendMainPage(req, res, logic.action (action, parameter));
 });
 
-app.listen(8000);
+app.listen(80);

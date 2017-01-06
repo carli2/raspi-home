@@ -31,9 +31,9 @@ module.exports = {
 		}
 	},
 	set: function (idx, value) {
-		fs.writeSync(gpiopath + pins[idx] + "/value", value);
+		fs.writeFileSync(gpiopath + pins[idx] + "/value", value ? "0" : "1");
 	},
 	get: function (idx) {
-		return Number(fs.readFileSync(gpiopath + pins[idx] + "/value"));
+		return Number(fs.readFileSync(gpioPath + pins[idx] + "/value")) ? 0 : 1;
 	}
 }
