@@ -10,8 +10,11 @@ module.exports = {
 	init: function() {
 		// GPIO-Filesystem initialisieren
 		for (var i = 0; i < pins.length; i++) {
-			fs.writeFileSync(exportPath, pins[i]);
-			fs.writeFileSync(gpioPath + pins[i] + "/direction", "out");
+			try {
+				fs.writeFileSync(exportPath, pins[i]);
+				fs.writeFileSync(gpioPath + pins[i] + "/direction", "out");
+			} catch (err) {
+			}
 		}
 	},
 	on: function (idx) {
