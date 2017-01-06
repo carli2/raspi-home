@@ -5,3 +5,15 @@
 body {
   max-width: 400px;
 }
+
+.links {
+	float: left;
+}
+
+.rechts {
+	float: right;
+}
+
+.clear {
+	clear: both;
+}
