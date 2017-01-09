@@ -2,7 +2,7 @@ var fs = require('fs');
 var spawn = require('child_process').spawn;
 var address = '0x38', bus = '1';
 
-var val = 0x00;
+var val = 0xff;
 
 spawn('i2cset', ['-y', bus, address, val]);
 
