@@ -2,7 +2,7 @@ var express = require('express');
 var app = express();
 
 var logic = require('./logic.js');
-var lights = require('./lights.js');
+var lights = require('./lights-i2c.js');
 
 lights.init();
 app.use(express.static(__dirname));

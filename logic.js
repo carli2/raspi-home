@@ -1,4 +1,4 @@
-var lights = require('./lights.js');
+var lights = require('./lights-i2c.js');
 
 module.exports.page = function () {
 	var html = '<div class=\"container-fluid\">';
