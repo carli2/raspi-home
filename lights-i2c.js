@@ -1,11 +1,10 @@
 var fs = require('fs');
-var i2c = require('i2c');
-var address = 0x38;
-var wire = new i2c(address, {device: '/dev/i2c-1'});
+var spawn = require('child_process').spawn;
+var address = '0x38', bus = '1';
 
 var val = 0x00;
 
-wire.writeByte(val);
+spawn('i2cwrite', ['-y', bus, address, val]);
 
 
 module.exports = {
@@ -27,7 +26,7 @@ module.exports = {
 	set: function (idx, value) {
 		val = val & ~(1 << idx);
 		if (value) val = val | 1 << idx;
-		wire.writeByte(val);
+		spawn('i2cwrite', ['-y', bus, address, val]);
 	},
 	get: function (idx) {
 		return (val >> idx) & 1;
