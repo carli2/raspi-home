@@ -12,7 +12,6 @@ function tick() {
 		}
 		lights.set(i, lebenszeit [i] != 0);
 	}
-	console.log(lebenszeit);
 	setTimeout(tick, 1000);
 }
 
@@ -31,9 +30,9 @@ module.exports.page = function () {
 			html += '<a class=\"btn-primary btn-large btn rechts"\ href="/action/daueran/' + i + '"><img src="/img/licht_aus2.png" height=20></a> ';
 		}
 
-		html += '<a class="btn rechts" href="/action/1h/' + i + '">1h</a>';
-		html += '<a class="btn rechts" href="/action/15m/' + i + '">15m</a>';
-		html += '<a class="btn rechts" href="/action/5m/' + i + '">5m</a>';
+		html += '<a class="btn rechts" style="padding: 10px 6px;" href="/action/1h/' + i + '">1h</a>';
+		html += '<a class="btn rechts" style="padding: 10px 6px;" href="/action/15m/' + i + '">15m</a>';
+		html += '<a class="btn rechts" style="padding: 10px 6px;" href="/action/5m/' + i + '">5m</a>';
 		html +='<br class="clear">' ;
 	 }
 	return html;
