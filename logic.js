@@ -1,28 +1,73 @@
 var lights = require('./lights-i2c.js');
 
+var lampen = ['Flur Licht', 'Flur Hinten', 'Draussen', 'Stube'/*, 'Flur Oben'*/];
+
+var lebenszeit = [];
+for (var i = 0; i < lampen.length; i++) lebenszeit.push(0);
+
+function tick() {
+	for (var i = 0; i < lampen.length; i++) {
+		if (lebenszeit [i] > 0) {
+			lebenszeit [i] = lebenszeit [i] - 1;
+		}
+		lights.set(i, lebenszeit [i] != 0);
+	}
+	console.log(lebenszeit);
+	setTimeout(tick, 1000);
+}
+
+tick();
+
 module.exports.page = function () {
 	var html = '<div class=\"container-fluid\">';
 	html += '<div class=\"buttons btn-group-lg\">';
-	html += '<h3 class="links">Flur Licht:</h3>  <a class=\"btn-primary btn-large btn rechts\" href=\"/action/lighton/0\">an</a> <a class=\"btn-primary btn btn-large rechts\" href=\"/action/lightoff/0\">aus</a> <br class="clear">';
-	html += '<h3 class="links">Flur Hinten:</h3>  <a class=\"btn-primary btn-large btn rechts\" href=\"/action/lighton/1\">an</a> <a class=\"btn-primary btn btn-large rechts\" href=\"/action/lightoff/1\">aus</a> <br class="clear">';
-	html += '<h3 class="links">Flur Draussen:</h3>  <a class=\"btn-primary btn-large btn rechts\" href=\"/action/lighton/2\">an</a> <a class=\"btn-primary btn btn-large rechts\" href=\"/action/lightoff/2\">aus</a> <br class="clear">';
-	html += '<h3 class="links">Flur Stube:</h3>  <a class=\"btn-primary btn-large btn rechts\" href=\"/action/lighton/3\">an</a> <a class=\"btn-primary btn btn-large rechts\" href=\"/action/lightoff/3\">aus</a> <br class="clear">';
-	html += '<h3>Blinken:</h3> <a class=\"btn-primary btn-large btn-block btn\" href=\"/action/blink\">Click!</a> <br>';
+
+	// Schleife durch alle Lampen
+	for (var i = 0; i < lampen.length; i++) {
+		html += '<h3 class="links">' + lampen[i] + '</h3>';
+		if (lights.get(i)) {
+			html += '<a class=\"btn-primary btn-large btn rechts"\ href="/action/daueraus/' + i + '"><img src="/img/licht_an.png" height=20></a> ';
+		} else {
+			html += '<a class=\"btn-primary btn-large btn rechts"\ href="/action/daueran/' + i + '"><img src="/img/licht_aus2.png" height=20></a> ';
+		}
+
+		html += '<a class="btn rechts" href="/action/1h/' + i + '">1h</a>';
+		html += '<a class="btn rechts" href="/action/15m/' + i + '">15m</a>';
+		html += '<a class="btn rechts" href="/action/5m/' + i + '">5m</a>';
+		html +='<br class="clear">' ;
+	 }
 	return html;
 }
 
 module.exports.action = function (action, parameter) {
-	if (action == "lighton") {
-		lights.on(parameter);
-	}
-	if (action == "lightoff") {
-		lights.off(parameter);
-	}
-	if (action == "blink") {
-		lights.on(0);
-		setTimeout(function () { lights.off(0); }, 1000);
-	}
 
+	 if (action == "daueraus") {
+		lebenszeit [parameter] = 0;
+		lights.off(parameter);
+		return 'Das Licht ist nun aus.';
+	}
+	if (action == "daueran") {
+		lebenszeit [parameter] = -1;
+		lights.on(parameter);
+		return 'Das Licht ist nun an.';
+	}
+	if (action == "5m") {
+		lebenszeit [parameter] = 5 * 60;
+		lights.on(parameter);
+		return 'Das Licht ist nun 5 Minuten an.';
+	}
+	if (action == "15m") {
+		lebenszeit [parameter] = 15 * 60;
+		lights.on(parameter);
+		return 'Das Licht ist nun 15 Minuten an.';
+	}
+	if (action == "1h") {
+		lebenszeit [parameter] = 60 * 60;
+		lights.on(parameter);
+		return 'Das Licht ist nun 1 Stunde an.';
+	}
 	// Status angeben
+
 	return 'Aktion: ' + action + ', Parameter: ' + parameter;
+
 }
