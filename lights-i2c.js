@@ -24,18 +24,18 @@ function LightBank(bus, address) {
 		}
 	}
 
-	this.getButton = function (idx) {
+	this.getButton = function (idx, invert) {
 		val |= 1 << idx; // pull high
 		spawn('i2cset', ['-y', bus, address, val]);
 		return {
 			get: function (resultfn) {
 				var result = '';
-				var p = spawn('i2cset', ['-y', bus, address]);
+				var p = spawn('i2cget', ['-y', bus, address]);
 				p.stdout.on('data', function (x) { result += x; });
 				p.stdout.on('end', function (x) {
-					console.log(result);
-					var val = parseInt(result);
-					resultfn((val >> idx) & 1);
+					var val = (parseInt(result) >> idx) & 1;
+					if (invert) val = 1 - val;
+					resultfn(val);
 				});
 			}
 		}

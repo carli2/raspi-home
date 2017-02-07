@@ -23,12 +23,16 @@ var lampen = [
 ];
 
 var bewegung_flur = bank2.getButton(0);
-var klingel = bank2.getButton(1);
+var klingel = bank2.getButton(1, true);
 
 setInterval(function () {
-	console.log('hier');
 	klingel.get(function (v) {
-		console.log(v);
+		if (v) {
+			console.log('Klingel um', new Date());
+		}
+	});
+	bewegung_flur.get(function (v) {
+		if (v) lampen[0].lebenszeit = 5 * 60;
 	});
 }, 500);
 
