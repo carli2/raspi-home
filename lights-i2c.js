@@ -2,33 +2,31 @@ var fs = require('fs');
 var spawn = require('child_process').spawn;
 var address = '0x38', bus = '1';
 
-var val = 0xff;
 
-spawn('i2cset', ['-y', bus, address, val]);
-
+function LightBank(bus, address) {
+	var val = 0xff;
+	spawn('i2cset', ['-y', bus, address, val]);
+	this.getLight = function(bus, address, idx) {
+		if (idx >= 0 && idx < 8) {
+			return {
+				on: function () { this.set(1); },
+				off: function () { this.set(0); },
+				toggle: function () { if (this.get()) this.set(0); else this.set(1); },
+				set: function (val) {
+					val = val & ~(1 << idx);
+					if (!value) val = val | 1 << idx;
+					spawn('i2cset', ['-y', bus, address, val]);
+				},
+				get: function () {
+					return 1 - ((val >> idx) & 1);
+				}
+			}
+		} else {
+			throw new Error("Light " + i + " not available");
+		}
+	}
+}
 
 module.exports = {
-	init: function() {
-	},
-	on: function (idx) {
-		this.set(idx, 1);
-	},
-	off: function (idx) {
-		this.set(idx, 0);
-	},
-	toggle: function (idx) {
-		if (this.get(idx)) {
-			this.set(idx, 0);
-		} else {
-			this.set(idx, 1);
-		}
-	},
-	set: function (idx, value) {
-		val = val & ~(1 << idx);
-		if (!value) val = val | 1 << idx;
-		spawn('i2cset', ['-y', bus, address, val]);
-	},
-	get: function (idx) {
-		return 1 - ((val >> idx) & 1);
-	}
+	LightBank: LightBank
 }

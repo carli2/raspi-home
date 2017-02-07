@@ -1,4 +1,25 @@
-var lights = require('./lights-i2c.js');
+var i2c = require('./lights-i2c.js');
+
+var bank = new i2c.LightBank(1, '0x38');
+
+var lights = [
+	{
+		title: 'Flur Ofen',
+		light: bank.getLight(0)
+	},
+	{
+		title: 'Flur Hinten',
+		light: bank.getLight(1)
+	},
+	{
+		title: 'Draußen',
+		light: bank.getLight(2)
+	},
+	{
+		title: 'Stube',
+		light: bank.getLight(3)
+	}
+];
 
 module.exports.page = function () {
 	var html = '<div class=\"container-fluid\">';
