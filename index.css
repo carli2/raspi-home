@@ -14,6 +14,10 @@ body {
 	float: right;
 }
 
+.klein{
+	font-size: 5px;
+}
+
 .clear {
 	clear: both;
 }
