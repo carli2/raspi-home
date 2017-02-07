@@ -6,13 +6,13 @@ var address = '0x38', bus = '1';
 function LightBank(bus, address) {
 	var val = 0xff;
 	spawn('i2cset', ['-y', bus, address, val]);
-	this.getLight = function(bus, address, idx) {
+	this.getLight = function(idx) {
 		if (idx >= 0 && idx < 8) {
 			return {
 				on: function () { this.set(1); },
 				off: function () { this.set(0); },
 				toggle: function () { if (this.get()) this.set(0); else this.set(1); },
-				set: function (val) {
+				set: function (value) {
 					val = val & ~(1 << idx);
 					if (!value) val = val | 1 << idx;
 					spawn('i2cset', ['-y', bus, address, val]);
@@ -22,7 +22,7 @@ function LightBank(bus, address) {
 				}
 			}
 		} else {
-			throw new Error("Light " + i + " not available");
+			throw new Error("Light " + idx + " not available");
 		}
 	}
 }

@@ -2,7 +2,7 @@ var i2c = require('./lights-i2c.js');
 
 var bank = new i2c.LightBank(1, '0x38');
 
-var lights = [
+var lampen = [
 	{
 		title: 'Flur Ofen',
 		light: bank.getLight(0)
@@ -21,17 +21,15 @@ var lights = [
 	}
 ];
 
-var lampen = ['Flur Licht', 'Flur Hinten', 'Draussen', 'Stube'/*, 'Flur Oben'*/];
-
 var lebenszeit = [];
-for (var i = 0; i < lampen.length; i++) lebenszeit.push(0);
+for (var i = 0; i < lampen.length; i++) lampen[i].lebenszeit = 0;
 
 function tick() {
 	for (var i = 0; i < lampen.length; i++) {
-		if (lebenszeit [i] > 0) {
-			lebenszeit [i] = lebenszeit [i] - 1;
+		if (lampen[i].lebenszeit > 0) {
+			lampen[i].lebenszeit = lampen[i].lebenszeit - 1;
 		}
-		lights.set(i, lebenszeit [i] != 0);
+		lampen[i].light.set(lampen[i].lebenszeit != 0);
 	}
 	setTimeout(tick, 1000);
 }
@@ -44,8 +42,8 @@ module.exports.page = function () {
 
 	// Schleife durch alle Lampen
 	for (var i = 0; i < lampen.length; i++) {
-		html += '<h3 class="links">' + lampen[i] + '</h3>';
-		if (lights.get(i)) {
+		html += '<h3 class="links">' + lampen[i].title + '</h3>';
+		if (lampen[i].light.get()) {
 			html += '<a class=\"btn-primary btn-large btn rechts"\ href="/action/daueraus/' + i + '"><img src="/img/licht_an.png" height=20></a> ';
 		} else {
 			html += '<a class=\"btn-primary btn-large btn rechts"\ href="/action/daueran/' + i + '"><img src="/img/licht_aus2.png" height=20></a> ';
@@ -62,28 +60,28 @@ module.exports.page = function () {
 module.exports.action = function (action, parameter) {
 
 	 if (action == "daueraus") {
-		lebenszeit [parameter] = 0;
-		lights.off(parameter);
+		lampen[parameter].lebenszeit = 0;
+		lampen[parameter].light.off();
 		return 'Das Licht ist nun aus.';
 	}
 	if (action == "daueran") {
-		lebenszeit [parameter] = -1;
-		lights.on(parameter);
+		lampen[parameter].lebenszeit = -1;
+		lampen[parameter].light.on();
 		return 'Das Licht ist nun an.';
 	}
 	if (action == "5m") {
-		lebenszeit [parameter] = 5 * 60;
-		lights.on(parameter);
+		lampen[parameter].lebenszeit = 5 * 60;
+		lampen[parameter].light.on();
 		return 'Das Licht ist nun 5 Minuten an.';
 	}
 	if (action == "15m") {
-		lebenszeit [parameter] = 15 * 60;
-		lights.on(parameter);
+		lampen[parameter].lebenszeit = 15 * 60;
+		lampen[parameter].light.on();
 		return 'Das Licht ist nun 15 Minuten an.';
 	}
 	if (action == "1h") {
-		lebenszeit [parameter] = 60 * 60;
-		lights.on(parameter);
+		lampen[parameter].lebenszeit = 60 * 60;
+		lampen[parameter].light.on();
 		return 'Das Licht ist nun 1 Stunde an.';
 	}
 	// Status angeben

@@ -4,7 +4,6 @@ var app = express();
 var logic = require('./logic.js');
 var lights = require('./lights-i2c.js');
 
-lights.init();
 app.use(express.static(__dirname));
 function sendMainPage(req, res, status) {
 	html = ('<!DOCTYPE html>\n'+
