@@ -1,6 +1,7 @@
 var i2c = require('./lights-i2c.js');
 
 var bank = new i2c.LightBank(1, '0x38');
+var bank2 = new i2c.LightBank(1, '0x39');
 
 var lampen = [
 	{
@@ -21,10 +22,11 @@ var lampen = [
 	}
 ];
 
-var bewegung_flur = bank.getButton(0);
-var klingel = bank.getButton(1);
+var bewegung_flur = bank2.getButton(0);
+var klingel = bank2.getButton(1);
 
 setInterval(function () {
+	console.log('hier');
 	klingel.get(function (v) {
 		console.log(v);
 	});
