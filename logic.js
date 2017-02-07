@@ -1,4 +1,5 @@
 var i2c = require('./lights-i2c.js');
+var spawn = require('child_process').spawn;
 
 var bank = new i2c.LightBank(1, '0x38');
 var bank2 = new i2c.LightBank(1, '0x39');
@@ -26,15 +27,24 @@ var bewegung_flur = bank2.getButton(0);
 var klingel = bank2.getButton(1, true);
 
 setInterval(function () {
-	klingel.get(function (v) {
-		if (v) {
-			console.log('Klingel um', new Date());
-		}
-	});
 	bewegung_flur.get(function (v) {
-		if (v) lampen[0].lebenszeit = 5 * 60;
+		if (v && lampen[0].lebenszeit >= 0 && lampen[0].lebenszeit <= 5*60) lampen[0].lebenszeit = 5 * 60;
 	});
 }, 500);
+
+function checkKlingel() {
+	klingel.get(function (v) {
+		if (v) {
+			if (lampen[0].lebenszeit >= 0 && lampen[0].lebenszeit <= 3) lampen[0].lebenszeit = 3;
+			console.log('Klingel um', new Date());
+			spawn('curl', ['https://launix.de/twilio/klingel.php?token=asdcf');
+			setTimeout(checkKlingel, 3000);
+		} else {
+			setTimeout(checkKlingel, 30);
+		}
+	});
+}
+checkKlingel();
 
 var lebenszeit = [];
 for (var i = 0; i < lampen.length; i++) lampen[i].lebenszeit = 0;
