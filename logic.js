@@ -37,7 +37,7 @@ function checkKlingel() {
 		if (v) {
 			if (lampen[0].lebenszeit >= 0 && lampen[0].lebenszeit <= 3) lampen[0].lebenszeit = 3;
 			console.log('Klingel um', new Date());
-			spawn('curl', ['https://launix.de/twilio/klingel.php?token=asdcf');
+			spawn('curl', ['https://launix.de/twilio/klingel.php?token=asdcf']);
 			setTimeout(checkKlingel, 3000);
 		} else {
 			setTimeout(checkKlingel, 30);
