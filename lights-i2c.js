@@ -1,7 +1,5 @@
 var fs = require('fs');
 var spawn = require('child_process').spawn;
-var address = '0x38', bus = '1';
-
 
 function LightBank(bus, address) {
 	var val = 0xff;
@@ -23,6 +21,23 @@ function LightBank(bus, address) {
 			}
 		} else {
 			throw new Error("Light " + idx + " not available");
+		}
+	}
+
+	this.getButton = function (idx) {
+		val |= 1 << idx; // pull high
+		spawn('i2cset', ['-y', bus, address, val]);
+		return {
+			get: function (resultfn) {
+				var result = '';
+				var p = spawn('i2cset', ['-y', bus, address]);
+				p.stdout.on('data', function (x) { result += x; });
+				p.stdout.on('end', function (x) {
+					console.log(result);
+					var val = parseInt(result);
+					resultfn((val >> idx) & 1);
+				});
+			}
 		}
 	}
 }

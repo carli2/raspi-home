@@ -21,6 +21,15 @@ var lampen = [
 	}
 ];
 
+var bewegung_flur = bank.getButton(0);
+var klingel = bank.getButton(1);
+
+setInterval(function () {
+	klingel.get(function (v) {
+		console.log(v);
+	});
+}, 500);
+
 var lebenszeit = [];
 for (var i = 0; i < lampen.length; i++) lampen[i].lebenszeit = 0;
 
