@@ -33,9 +33,12 @@ function LightBank(bus, address) {
 				var p = spawn('i2cget', ['-y', bus, address]);
 				p.stdout.on('data', function (x) { result += x; });
 				p.stdout.on('end', function (x) {
-					var val = (parseInt(result) >> idx) & 1;
-					if (invert) val = 1 - val;
-					resultfn(val);
+					if (result[0] == '0' && result[1] == 'x') {
+						val = parseInt(result);
+					}
+					var bit = (val >> idx) & 1;
+					if (invert) bit = 1 - bit;
+					resultfn(bit);
 				});
 			}
 		}
